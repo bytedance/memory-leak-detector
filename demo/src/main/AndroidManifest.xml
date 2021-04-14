@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bytedance.raphael.demo">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name="com.bytedance.demo.DemoApp"
+        android:label="Raphael"
+        android:icon="@drawable/icon"
+        android:supportsRtl="true"
+        android:allowBackup="true">
+
+        <activity
+            android:name="com.bytedance.demo.MainActivity"
+            android:theme="@style/MainTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

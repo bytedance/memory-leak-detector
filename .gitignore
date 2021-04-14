@@ -1,0 +1,28 @@
+bin
+gen
+.settings
+.DS_Store
+
+# IntelliJ
+.idea/
+*.iml
+captures/
+
+# Eclipse User-specific configurations
+.project
+.classpath
+.settings/
+
+# Generated files
+bin/
+gen/
+
+# Gradle files
+.gradle/
+build/
+*/build/
+*/.externalNativeBuild/
+*/.DS_Store
+
+# Local configuration file (sdk path, etc)
+local.properties

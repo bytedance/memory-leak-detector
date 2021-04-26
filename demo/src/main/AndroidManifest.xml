@@ -11,7 +11,8 @@
         android:label="Raphael"
         android:icon="@drawable/icon"
         android:supportsRtl="true"
-        android:allowBackup="true">
+        android:allowBackup="true" >
+<!--        android:extractNativeLibs="true">-->
 
         <activity
             android:name="com.bytedance.demo.MainActivity"

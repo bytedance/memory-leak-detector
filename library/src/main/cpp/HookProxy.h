@@ -86,6 +86,7 @@ static  int  (*munmap_origin)(void*, size_t) = munmap;
 static void  (*pthread_exit_origin)(void *) = pthread_exit;
 //**************************************************************************************************
 static void *malloc_proxy(size_t size) {
+    LOGGER("malloc_proxy: %d", size);
     if (isPss && size >= limit && !(uintptr_t) pthread_getspecific(guard)) {
         pthread_setspecific(guard, (void *) 1);
         void *address = malloc_origin(size);

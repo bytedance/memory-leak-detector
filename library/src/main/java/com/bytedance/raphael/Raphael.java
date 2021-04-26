@@ -28,6 +28,7 @@ public class Raphael {
     public static int DIFF_CACHE = 0x00200000;
 
     static {
+        System.loadLibrary("tester");
         System.loadLibrary("raphael");
     }
 

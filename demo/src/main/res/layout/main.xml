@@ -5,6 +5,18 @@
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/btn_malloc"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="200dp"
+        android:gravity="center"
+        android:text="Malloc"
+        android:textSize="21sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/btn_background" />
+
+    <TextView
         android:id="@+id/btn"
         android:layout_width="200dp"
         android:layout_height="50dp"

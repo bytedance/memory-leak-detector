@@ -115,14 +115,51 @@ static void *calloc_proxy(size_t count, size_t bytes) {
 }
 
 static void *realloc_proxy(void *ptr, size_t size) {
-    if (isPss && size >= limit && !(uintptr_t) pthread_getspecific(guard)) {
+    if (isPss && !(uintptr_t) pthread_getspecific(guard)) {
         pthread_setspecific(guard, (void *) 1);
-        void *address = realloc_origin(ptr, size);
-        if (address != NULL || size == 0) {
-            cache->remove((uintptr_t) ptr);
-        }
-        if (address != NULL) {
-            insert_memory_backtrace(address, size);
+        void* address = realloc_origin(ptr, size);
+        if (address == NULL) {
+            if (ptr == NULL) {
+                if (size == 0) {
+                    // realloc do nothing (maybe cannot reach here)
+                } else {
+                    // realloc equal to malloc, and malloc failed
+                }
+            } else {
+                if (size == 0) {
+                    // malloc equal to free
+                    cache->remove((uintptr_t) ptr);
+
+                } else {
+                    // realloc failed (the original block is left untouched)
+                }
+            }
+        } else {
+            if (ptr == NULL) {
+                if (size == 0) {
+                    // realloc do nothing (realloc only return base address)
+
+                } else {
+                    // realloc equal to malloc, and malloc succeed
+                    if (size >= limit) {
+                        insert_memory_backtrace(address, size);
+                    }
+                }
+            } else {
+                if (size == 0) {
+                    // maybe cannot reach here
+                    cache->remove((uintptr_t) ptr);
+
+                } else {
+                    // TODO(huchao) Bug: 如果realloc size < limit，则此处会被跳过
+                    if (size >= limit) {
+                        // if address == ptr, origin memory area not moved
+                        // if address != ptr, origin memory area is moved, ptr was freed by realloc
+                        cache->remove((uintptr_t) ptr);
+                        insert_memory_backtrace(address, size);
+                    }
+                }
+            }
         }
         pthread_setspecific(guard, (void *) 0);
         return address;

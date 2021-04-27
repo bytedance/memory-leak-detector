@@ -20,6 +20,8 @@
 #include "Raphael.h"
 #include "HookProxy.h"
 #include "MemoryCache.h"
+#include "PltGotHookProxy.h"
+
 //**************************************************************************************************
 void Raphael::start(JNIEnv *env, jobject obj, jint configs, jstring space, jstring regex) {
     mSpace = (char *) env->GetStringUTFChars(space, 0);
@@ -27,7 +29,8 @@ void Raphael::start(JNIEnv *env, jobject obj, jint configs, jstring space, jstri
     update_configs(mCache, 0);
 
     if (regex != nullptr) {
-        registerPltGotProxy(env, regex);
+        registerSoLoadProxy(env, regex);
+        //registerPltGotProxy(env, regex);
     } else {
         registerInlineProxy(env);
     }
@@ -69,7 +72,8 @@ void Raphael::clean_cache(JNIEnv *env) {
     if ((pDir = opendir(mSpace)) != NULL) {
         while ((pDirent = readdir(pDir)) != NULL) {
             if (strcmp(pDirent->d_name, ".") != 0 && strcmp(pDirent->d_name, "..") != 0) {
-                if (snprintf(path, MAX_BUFFER_SIZE, "%s/%s", mSpace, pDirent->d_name) < MAX_BUFFER_SIZE) {
+                if (snprintf(path, MAX_BUFFER_SIZE, "%s/%s", mSpace, pDirent->d_name) <
+                    MAX_BUFFER_SIZE) {
                     remove(path);
                 }
             }

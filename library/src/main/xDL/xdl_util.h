@@ -26,10 +26,19 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define XDL_UTIL_TEMP_FAILURE_RETRY(exp) ({ \
+    __typeof__(exp) _rc;                    \
+    do {                                    \
+        errno = 0;                          \
+        _rc = (exp);                        \
+    } while (_rc == -1 && errno == EINTR);  \
+    _rc; })
 
 bool xdl_util_starts_with(const char *str, const char *start);
 bool xdl_util_ends_with(const char* str, const char* ending);

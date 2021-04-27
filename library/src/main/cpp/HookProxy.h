@@ -121,13 +121,14 @@ static void *calloc_proxy(size_t count, size_t bytes) {
 }
 
 static void *realloc_proxy(void *ptr, size_t size) {
-    if (isPss && size >= limit && !(uintptr_t) pthread_getspecific(guard)) {
+    if (isPss && !(uintptr_t) pthread_getspecific(guard)) {
         pthread_setspecific(guard, (void *) 1);
         void *address = realloc_origin(ptr, size);
-        if (address != NULL || size == 0) {
+        if (ptr != NULL && (size == 0 || address != NULL)) {
             cache->remove((uintptr_t) ptr);
         }
-        if (address != NULL) {
+
+        if (address != NULL && size >= limit) {
             insert_memory_backtrace(address, size);
         }
         pthread_setspecific(guard, (void *) 0);

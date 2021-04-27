@@ -142,29 +142,39 @@ static int xdl_iterate_by_linker_cb(struct dl_phdr_info *info, size_t size, void
     uintptr_t linker_load_bias = *pkg++;
     int flags = (int)*pkg;
 
-    if(0 == info->dlpi_addr || NULL == info->dlpi_name || '\0' == info->dlpi_name[0]) return 0; // ignore invalid ELF
-    if(linker_load_bias == info->dlpi_addr) return 0; // ignore linker if we have returned it already
+    // ignore invalid ELF
+    if(0 == info->dlpi_addr || NULL == info->dlpi_name || '\0' == info->dlpi_name[0]) return 0;
 
+    // ignore linker if we have returned it already
+    if(linker_load_bias == info->dlpi_addr) return 0;
+
+    struct dl_phdr_info info_fixed;
+    info_fixed.dlpi_addr = info->dlpi_addr;
+    info_fixed.dlpi_name = info->dlpi_name;
+    info_fixed.dlpi_phdr = info->dlpi_phdr;
+    info_fixed.dlpi_phnum = info->dlpi_phnum;
+    info = &info_fixed;
+
+    // fix dlpi_phdr & dlpi_phnum (from memory)
+    if(NULL == info->dlpi_phdr || 0 == info->dlpi_phnum)
+    {
+        ElfW(Ehdr) *ehdr = (ElfW(Ehdr) *)info->dlpi_addr;
+        info->dlpi_phdr = (ElfW(Phdr) *)(info->dlpi_addr + ehdr->e_phoff);
+        info->dlpi_phnum = ehdr->e_phnum;
+    }
+
+    // fix dlpi_name (from /proc/self/maps)
     if('/' != info->dlpi_name[0] && '[' != info->dlpi_name[0] && (0 != (flags & XDL_FULL_PATHNAME)))
     {
-        // get pathname from /proc/self/maps
         char buf[512];
         uintptr_t pathname = xdl_iterate_get_pathname_from_maps(info, buf, sizeof(buf), maps);
         if(0 == pathname) return 0; // ignore this ELF
 
-        // callback
-        struct dl_phdr_info info_fixed;
-        info_fixed.dlpi_addr = info->dlpi_addr;
-        info_fixed.dlpi_name = (const char *)pathname;
-        info_fixed.dlpi_phdr = info->dlpi_phdr;
-        info_fixed.dlpi_phnum = info->dlpi_phnum;
-        return cb(&info_fixed, size, cb_arg);
+        info->dlpi_name = (const char *)pathname;
     }
-    else
-    {
-        // callback
-        return cb(info, size, cb_arg);
-    }
+
+    // callback
+    return cb(info, size, cb_arg);
 }
 
 static uintptr_t xdl_iterate_find_linker_base(FILE **maps)
@@ -184,7 +194,7 @@ static uintptr_t xdl_iterate_find_linker_base(FILE **maps)
 
         // get base address
         uintptr_t base, offset;
-        if(2 != sscanf(line, "%"SCNxPTR"-%*"SCNxPTR" r%*2sp %"SCNxPTR" ", &base, &offset)) continue;
+        if(2 != sscanf(line, "%"SCNxPTR"-%*"SCNxPTR" r-xp %"SCNxPTR" ", &base, &offset)) continue;
         if(0 != offset) continue;
         if(0 != memcmp((void *)base, ELFMAG, SELFMAG)) continue;
 

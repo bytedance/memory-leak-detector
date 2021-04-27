@@ -141,7 +141,7 @@ int xdl_lzma_decompress(uint8_t *src, size_t src_size, uint8_t **dst, size_t *ds
         dst_remaining = *dst_size - dst_offset;
 
         int result;
-        if(api_level >= 29)
+        if(api_level >= __ANDROID_API_Q__)
         {
             xdl_lzma_code_q_t lzma_code_q = (xdl_lzma_code_q_t)xdl_lzma_code;
             result = lzma_code_q(&state, *dst + dst_offset, &dst_remaining, src + src_offset, &src_remaining, 1, CODER_FINISH_ANY, &status);

@@ -29,6 +29,7 @@
 #include <inttypes.h>
 #include <string.h>
 #include <stdio.h>
+#include <android/api-level.h>
 #include "xdl_util.h"
 #include "xdl_const.h"
 
@@ -92,9 +93,7 @@ int xdl_util_get_api_level(void)
 
     if(xdl_util_api_level < 0)
     {
-        char api_level_str[5];
-        __system_property_get("ro.build.version.sdk", api_level_str);
-        int api_level = atoi(api_level_str);
+        int api_level = android_get_device_api_level();
         if(api_level < 0)
             api_level = xdl_util_get_api_level_from_build_prop(); // compatible with unusual models
         if(api_level < __ANDROID_API_J__)

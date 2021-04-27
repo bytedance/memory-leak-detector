@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 #include <pthread.h>
 #include <dlfcn.h>
 #include <cxxabi.h>
+#include <xdl.h>
 
 #include "Logger.h"
 #include "MapData.h"
@@ -44,35 +45,64 @@ inline AllocNode *remove_alloc(AllocNode **header, uintptr_t address) {
     }
 }
 
-void write_trace(FILE *output, AllocNode *alloc_node, MapData *map_data) {
-    Dl_info dli;
-    fprintf(output, "\n%p, %u, 1\n", alloc_node->addr, alloc_node->size & 0x03FFFFFF);
-    for (int i = 0, status; i < alloc_node->size >> 27; i++) {
-        dli.dli_sname = nullptr;
-        dli.dli_saddr = nullptr;
-        dli.dli_fname = nullptr;
-        dladdr((void *) alloc_node->trace[i], &dli);
-
-        uintptr_t pc;
-        const MapEntry *entry = map_data->find(alloc_node->trace[i], &pc);
-
-        const char *soname = (entry != nullptr) ? entry->name.c_str() : dli.dli_fname;
-        if (soname == nullptr) {
-            soname = "<unknown>";
-        }
-
-        char *symbol = nullptr;
-        if (dli.dli_sname != nullptr) {
-            symbol = __cxxabiv1::__cxa_demangle(dli.dli_sname, 0, 0, &status);
-        }
-
-        if (symbol != nullptr) {
-            fprintf(output, "0x%08X %s (%s + %u)\n", pc, soname, symbol, alloc_node->trace[i] - (uintptr_t) dli.dli_saddr);
-            free(symbol);
-        } else if (dli.dli_sname != nullptr) {
-            fprintf(output, "0x%08X %s (%s + \?)\n", pc, soname, dli.dli_sname);
+void write_trace(FILE *output, AllocNode *alloc_node, MapData *map_data, void **dl_cache) {
+    fprintf(output, STACK_FORMAT_HEADER, alloc_node->addr, alloc_node->size & 0x03FFFFFF);
+    for (int i = 0; i < alloc_node->size >> 27; i++) {
+        uintptr_t pc = alloc_node->trace[i];
+        Dl_info info;
+        if (0 == xdl_addr((void *) pc, &info, dl_cache) || (uintptr_t) info.dli_fbase > pc) {
+            fprintf(
+                    output,
+                    STACK_FORMAT_UNKNOWN,
+                    pc
+            );
         } else {
-            fprintf(output, "0x%08X %s (unknown)\n", pc, soname);
+            if (nullptr == info.dli_fname || '\0' == info.dli_fname[0]) {
+                fprintf(
+                        output,
+                        STACK_FORMAT_ANONYMOUS,
+                        pc - (uintptr_t) info.dli_fbase,
+                        (uintptr_t) info.dli_fbase
+                );
+            } else {
+                if (nullptr == info.dli_sname || '\0' == info.dli_sname[0]) {
+                    fprintf(
+                            output,
+                            STACK_FORMAT_FILE,
+                            pc - (uintptr_t) info.dli_fbase,
+                            info.dli_fname
+                    );
+                } else {
+                    int s;
+                    const char *symbol = __cxxabiv1::__cxa_demangle(
+                            info.dli_sname,
+                            nullptr,
+                            nullptr,
+                            &s
+                    );
+                    if (0 == (uintptr_t) info.dli_saddr || (uintptr_t) info.dli_saddr > pc) {
+                        fprintf(
+                                output,
+                                STACK_FORMAT_FILE_NAME,
+                                pc - (uintptr_t) info.dli_fbase,
+                                info.dli_fname,
+                                symbol == nullptr ? info.dli_sname : symbol
+                        );
+                    } else {
+                        fprintf(
+                                output,
+                                STACK_FORMAT_FILE_NAME_LINE,
+                                pc - (uintptr_t) info.dli_fbase,
+                                info.dli_fname,
+                                symbol == nullptr ? info.dli_sname : symbol,
+                                pc - (uintptr_t) info.dli_saddr
+                        );
+                    }
+                    if (symbol != nullptr) {
+                        free((void *) symbol);
+                    }
+                }
+            }
         }
     }
 }
@@ -138,12 +168,13 @@ void MemoryCache::print() {
         LOGGER("print report failed, can't open report file");
         return;
     }
-
+    void *dl_cache = nullptr;
     MapData map_data = MapData();
-    for (int i = 0; i < ALLOC_INDEX_SIZE; i++) {
-        for (AllocNode *p = alloc_table[i]; p != nullptr; p = p->next) {
-            write_trace(report, p, &map_data);
+    for (auto p : alloc_table) {
+        for (; p != nullptr; p = p->next) {
+            write_trace(report, p, &map_data, &dl_cache);
         }
     }
+    xdl_addr_clean(&dl_cache);
     fclose(report);
 }

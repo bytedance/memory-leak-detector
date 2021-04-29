@@ -28,7 +28,7 @@ allprojects {
 Step 2: Add the dependency
 ```gradle
 dependencies {
-    implementation 'com.github.bytedance:memory-leak-detector:0.0.9'
+    implementation 'com.github.bytedance:memory-leak-detector:0.1.1'
 }
 ```
 

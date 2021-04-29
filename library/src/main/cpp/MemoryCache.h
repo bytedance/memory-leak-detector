@@ -21,14 +21,14 @@
 #include "AllocPool.hpp"
 
 #if defined(__LP64__)
-#define STACK_FORMAT_HEADER "\n0x%016lx, %u\n"
+#define STACK_FORMAT_HEADER "\n0x%016lx, %u, 1\n"
 #define STACK_FORMAT_UNKNOWN "0x%016lx <unknown>\n"
 #define STACK_FORMAT_ANONYMOUS "0x%016lx <anonymous:%016lx>\n"
 #define STACK_FORMAT_FILE "0x%016lx %s\n"
 #define STACK_FORMAT_FILE_NAME "0x%016lx %s (%s)\n"
 #define STACK_FORMAT_FILE_NAME_LINE "0x%016lx %s (%s + %lu)\n"
 #else
-#define STACK_FORMAT_HEADER "\n0x%08x, %u\n"
+#define STACK_FORMAT_HEADER "\n0x%08x, %u, 1\n"
 #define STACK_FORMAT_UNKNOWN "0x%08x <unknown>\n"
 #define STACK_FORMAT_ANONYMOUS "0x%08x <anonymous:%08x>\n"
 #define STACK_FORMAT_FILE "0x%08x %s\n"

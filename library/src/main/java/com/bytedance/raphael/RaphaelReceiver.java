@@ -24,7 +24,7 @@ import android.text.TextUtils;
 import java.io.File;
 
 /**
- * adb shell am broadcast -a com.bytedance.raphael.ACTION_START -f 0x01000000 --es configs 0x03F1000 --es regex ".*\\.so$"
+ * adb shell am broadcast -a com.bytedance.raphael.ACTION_START -f 0x01000000 --es configs 0xCF0400 --es regex ".*libXXX\\.so$"
  * adb shell am broadcast -a com.bytedance.raphael.ACTION_STOP -f 0x01000000
  * adb shell am broadcast -a com.bytedance.raphael.ACTION_PRINT -f 0x01000000
  */
@@ -43,14 +43,14 @@ public class RaphaelReceiver extends BroadcastReceiver {
 
     int getConfigs(String params) {
         if (TextUtils.isEmpty(params)) {
-            return Raphael.MAP64_MODE | Raphael.ALLOC_MODE | Raphael.DIFF_CACHE | 0xF0000 | 4096;
+            return Raphael.MAP64_MODE | Raphael.ALLOC_MODE | 0xF0000 | 4096;
         }
 
         try {
             return Integer.decode(params);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            return Raphael.MAP64_MODE | Raphael.ALLOC_MODE | Raphael.DIFF_CACHE | 0xF0000 | 4096;
+            return Raphael.MAP64_MODE | Raphael.ALLOC_MODE | 0xF0000 | 4096;
         }
     }
 

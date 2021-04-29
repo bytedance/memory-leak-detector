@@ -17,7 +17,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    api project(':library')
+    api project(':library')
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.github.bytedance:memory-leak-detector:0.0.9'
+//    implementation 'com.github.bytedance:memory-leak-detector:0.1.1'
 }

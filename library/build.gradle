@@ -3,6 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 28
+
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
@@ -11,7 +12,7 @@ android {
             cmake {
                 cppFlags "-fvisibility=hidden"
                 abiFilters 'armeabi-v7a', 'arm64-v8a'
-                arguments "-DANDROID_ARM_MODE=arm", "-DANDROID_STL=c++_shared"
+                arguments "-DANDROID_ARM_MODE=arm", "-DANDROID_STL=c++_static"
             }
         }
     }

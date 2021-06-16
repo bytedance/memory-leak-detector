@@ -47,6 +47,8 @@ static inline void GetStackRange(uintptr_t *st, uintptr_t *sb) {
 __attribute__((visibility("default")))
 size_t unwind_backtrace(uintptr_t *stack, size_t max_depth);
 
+void init_arm64_unwind();
+
 #ifdef __cplusplus
 }
 #endif

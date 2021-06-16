@@ -381,6 +381,7 @@ void registerInlineProxy(JNIEnv *env) {
     }
     inlineHookAll();
 #else
+    init_arm64_unwind();
     for (int i = 0; i < PROXY_MAPPING_LENGTH; i++) {
         A64HookFunction((void *) sInline[i][1], (void *) sInline[i][2], (void **) sInline[i][3]);
     }

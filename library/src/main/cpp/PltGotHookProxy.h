@@ -220,10 +220,8 @@ static const void *sSoLoad[][3] = {
 };
 
 static void tryHookAllFunc(xh_elf_t elf) {
-    if (isPss) {
-        for (int i = 0; i < sizeof(sPltGot) / sizeof(sPltGot[0]); i++) {
-            xh_elf_hook(&elf, (const char *) sPltGot[i][0], (void *) sPltGot[i][1], NULL);
-        }
+    for (int i = 0; i < sizeof(sPltGot) / sizeof(sPltGot[0]); i++) {
+        xh_elf_hook(&elf, (const char *) sPltGot[i][0], (void *) sPltGot[i][1], NULL);
     }
 }
 
@@ -257,7 +255,7 @@ int default_callback(const char *name, uintptr_t base) {
     if (0 != xh_elf_init(&elf, base, name)) {
         return 0;
     }
-    if (use_regex || (regexec(&focused_regex, name, 0, NULL, 0) == 0)) {
+    if (!use_regex || (regexec(&focused_regex, name, 0, NULL, 0) == 0)) {
         tryHookAllFunc(elf);
     }
     tryHookSoLoadFunc(elf, true);
@@ -334,8 +332,8 @@ int registerSoLoadProxy(JNIEnv *env, jstring focused) {
             dlopen_ext_N = (void *(*)(const char *, int, const void *, const void *)) (xdl_sym(dl,
                                                                                                DLOPEN_EXT_SYMBOL_N));
             g_dl_mutex = (pthread_mutex_t *) (xdl_sym(dl, DLOPEN_MUTEX_SYMBOL_N));
+            xdl_close(dl);
         }
-        xdl_close(&dl);
     }
 
     xdl_iterate_phdr(dl_iterate_callback, NULL, XDL_FULL_PATHNAME);

@@ -30,7 +30,6 @@ void Raphael::start(JNIEnv *env, jobject obj, jint configs, jstring space, jstri
 
     if (regex != nullptr) {
         registerSoLoadProxy(env, regex);
-        //registerPltGotProxy(env, regex);
     } else {
         registerInlineProxy(env);
     }

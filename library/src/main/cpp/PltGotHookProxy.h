@@ -334,8 +334,8 @@ int registerSoLoadProxy(JNIEnv *env, jstring focused) {
             dlopen_ext_N = (void *(*)(const char *, int, const void *, const void *)) (xdl_sym(dl,
                                                                                                DLOPEN_EXT_SYMBOL_N));
             g_dl_mutex = (pthread_mutex_t *) (xdl_sym(dl, DLOPEN_MUTEX_SYMBOL_N));
+            xdl_close(dl);
         }
-        xdl_close(&dl);
     }
 
     xdl_iterate_phdr(dl_iterate_callback, NULL, XDL_FULL_PATHNAME);

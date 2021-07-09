@@ -14,14 +14,13 @@
 # limitations under the License.
 #
 
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import re
 import os
 import sys
 import time
 import argparse
-import commands
 
 __PATTERN__ = re.compile(r'(\S+)-(\S+) \S+ \S+ \S+ (\d+)\s*(.*)$')
 
@@ -86,13 +85,13 @@ def analyse(name):
             key = 'atexit'
         else:
             key = 'extras'
-        length = long(m.group(2), 16) - long(m.group(1), 16)
+        length = int(m.group(2), 16) - int(m.group(1), 16)
         totals += length
         length += (detail.get(key) if key in detail.keys() else 0)
         detail.update({key: length})
     print('========== %s ==========' % os.path.basename(name))
     print('%s\t%s' % (format(totals, ',').rjust(13, ' '), 'totals'))
-    detail = sorted(detail.items(), lambda x, y: cmp(x[1], y[1]), reverse=True)
+    detail = sorted(detail.items(), key=lambda x: x[1], reverse=True)
     extras = -1
     for i in range(0, len(detail)):
         if detail[i][0] != 'extras':
@@ -112,5 +111,5 @@ if __name__ == '__main__':
     try:
         analyse(argParams.maps)
     except Exception as e:
-        print e
+        print(e)
 

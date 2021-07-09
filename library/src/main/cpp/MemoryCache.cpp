@@ -46,8 +46,8 @@ inline AllocNode *remove_alloc(AllocNode **header, uintptr_t address) {
 }
 
 void write_trace(FILE *output, AllocNode *alloc_node, MapData *map_data, void **dl_cache) {
-    fprintf(output, STACK_FORMAT_HEADER, alloc_node->addr, alloc_node->size & 0x03FFFFFF);
-    for (int i = 0; i < alloc_node->size >> 27; i++) {
+    fprintf(output, STACK_FORMAT_HEADER, alloc_node->addr, alloc_node->size);
+    for (int i = 0; alloc_node->trace[i] != 0; i++) {
         uintptr_t pc = alloc_node->trace[i];
         Dl_info info;
         if (0 == xdl_addr((void *) pc, &info, dl_cache) || (uintptr_t) info.dli_fbase > pc) {
@@ -129,13 +129,12 @@ void MemoryCache::insert(uintptr_t address, size_t size, Backtrace *backtrace) {
         LOGGER("Alloc cache is full!!!!!!!!");
         return;
     }
+
     p->addr = address;
-    if (backtrace->depth > 2) {
-        p->size = size | (backtrace->depth - 2) << 27;
-        memcpy(p->trace, backtrace->trace + 2, (backtrace->depth - 2) * sizeof(uintptr_t));
-    } else {
-        p->size = size;
-    }
+    p->size = size;
+    uint depth = backtrace->depth > 2 ? backtrace->depth - 2 : 1;
+    memcpy(p->trace, backtrace->trace + 2, depth * sizeof(uintptr_t));
+    p->trace[depth - 1] = 0;
 
     uint16_t alloc_hash = (address >> ADDR_HASH_OFFSET) & 0xFFFF;
     pthread_mutex_lock(&alloc_mutex);

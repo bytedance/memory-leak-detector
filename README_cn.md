@@ -24,7 +24,7 @@ allprojects {
 Step 2: Add the dependency
 ```gradle
 dependencies {
-    implementation 'com.github.bytedance:memory-leak-detector:0.1.3'
+    implementation 'com.github.bytedance:memory-leak-detector:0.1.5'
 }
 ```
 
@@ -73,10 +73,28 @@ adb shell am broadcast -a com.bytedance.raphael.ACTION_PRINT -f 0x01000000
 Step 5: Analysis
 ```shell
 ## 聚合 report，该文件在 print/stop 之后生成，需要手动 pull 出来
+## 用到离线符号符号化功能的，需将raphael.py里的addr2line改为自己本地的NDK路径
 ##   -r: 日志路径, 必需，手机端生成的report文件
 ##   -o: 输出文件名，非必需，默认为 leak-doubts.txt
 ##   -s: 符号表目录，非必需，有符号化需求时可传，符号表文件需跟so同名，如：libXXX.so，多个文件需放在同一目录下儿
 python library/src/main/python/raphael.py -r report -o leak-doubts.txt -s ./symbol/
+
+## 数据格式说明
+##  201,852,591	totals // 单指raphael拦截到的未释放的虚拟内存总和
+##  118,212,424	libandroid_runtime.so
+##   28,822,002	libhwui.so
+##   24,145,920	libstagefright.so
+##   15,679,488	libv8.cr.so
+##    9,566,192	libc++_shared.so
+##       25,536	libsqlite.so
+##       12,288	libv8_libbase.cr.so
+##    5,388,741	extras // raphael.py里预设了一些通用配置，可以通过修改规则进一步识别分组到extras里的数据
+##
+##
+## bdb11000, 70828032, 66 => bdb11000是report里此堆栈第一次分配出的内存地址，70828032是report里此堆栈的内存总和，66是report里此堆栈的总次数
+## 0x000656cf /system/lib/libc.so (pthread_create + 246)
+## 0x0037c129 /system/lib/libart.so (art::Thread::CreateNativeThread(_JNIEnv*, _jobject*, unsigned int, bool) + 448)
+## 0x00112137 /system/framework/arm/boot.oat (java.lang.Thread.nativeCreate + 142)
 ```
 
 ```shell

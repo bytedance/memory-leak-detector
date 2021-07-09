@@ -146,7 +146,7 @@ def print_report(writer, report):
     if extras != -1:
         writer.write('%s\t%s\n' % (format(groups[extras][1], ',').rjust(13, ' '), groups[extras][0]))
 
-    report.sort(lambda x, y: x.size - y.size, reverse=True)
+    report.sort(lambda x, y: cmp(x.size, y.size), reverse=True)
     for record in report:
         retry_symbol(record)
 

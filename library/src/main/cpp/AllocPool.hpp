@@ -28,6 +28,7 @@ public:
         masks = count - 1;
         cache = (T * ) malloc(count * sizeof(T  ));
         index = (T **) malloc(count * sizeof(T *));
+        usingRecycle = false;
     }
 
     ~AllocPool() {
@@ -38,11 +39,34 @@ public:
     void reset() {
         tail.store(0);
         head.store(0);
+        usingRecycle = false;
     }
 
     T* apply() {
         uint i = tail.fetch_add(1, memory_order_acquire);
-        return (i <= masks) ? cache + i : index[i & masks];
+        if (i <= masks && !usingRecycle) {
+            return cache + i;
+        } else {
+            if (!usingRecycle) {
+                usingRecycle = true;
+            }
+            uint recycleIndex = i & masks;
+            if (recycleIndex < head.load(memory_order_acquire)) {
+                T *recycle = index[recycleIndex];
+                if (recycle == nullptr) {
+                    //no recycle item,tail back
+                    tail.fetch_sub(1, memory_order_acquire);
+                } else {
+                    //set to null,mark it used
+                    index[recycleIndex] = nullptr;
+                }
+                return recycle;
+            } else {
+                //no recycle item
+                tail.fetch_sub(1, memory_order_acquire);
+                return nullptr;
+            }
+        }
     }
 
     void recycle(T *t) {
@@ -55,6 +79,7 @@ private:
     std::atomic<uint> head;
     T *               cache;
     T **              index;
+    bool              usingRecycle;
 };
 
 #endif //ALLOC_POOL_H

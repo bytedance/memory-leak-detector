@@ -14,13 +14,13 @@
 # limitations under the License.
 #
 
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import re
 import os
 
 import argparse
-import commands
+import subprocess
 
 
 # addr2line environment
@@ -83,15 +83,10 @@ class Trace:
 
 
 def addr_to_line(address, symbol_path):
-    status, output = commands.getstatusoutput('arm-linux-androideabi-addr2line -e %s -f %s' % (symbol_path, address))
+    status, output = subprocess.getstatusoutput('arm-linux-androideabi-addr2line -C -e %s -f %s' % (symbol_path, address))
     if status != 0:
-        raise Exception('execute [arm-linux-androideabi-addr2line -e %s -f %s] failed' % (symbol_path, address))
-    splits = output.split('\n')
-
-    status, output = commands.getstatusoutput('c++filt -n %s' % (splits[0]))
-    if status != 0:
-        raise Exception('execute [filt -n %s] failed' % (splits[0]))
-    return output
+        raise Exception('execute [arm-linux-androideabi-addr2line -C -e %s -f %s] failed' % (symbol_path, address))
+    return output.split('\n')[0]
 
 
 def retry_symbol(record):
@@ -115,11 +110,11 @@ def retry_symbol(record):
 
 def group_record(record):
     default = None
-    for i in range(len(record.stack) - 1, -1, -1):
-        match = re.match(r'.+\/(.+\.(so|apk|oat))', record.stack[i].path, re.M | re.I)
+    for frame in record.stack:
+        match = re.match(r'.+\/(.+\.(so|apk|oat))', frame.path, re.M | re.I)
         if not match or match.group(1) == 'libraphael.so':
             continue
-        elif record.stack[i].path.startswith('/data/'):
+        elif frame.path.startswith('/data/'):
             return match.group(1)
         elif match.group(1) in system_group and not default:
             default = match.group(1)
@@ -132,9 +127,9 @@ def print_report(writer, report):
     for record in report:
         name = group_record(record)
         size = record.size
-        groups.update({name: size + (int(groups.get(name)) if groups.has_key(name) else 0)})
+        groups.update({name: size + (int(groups.get(name)) if name in groups else 0)})
         totals += size
-    groups = sorted(groups.items(), lambda x, y: cmp(x[1], y[1]), reverse=True)
+    groups = sorted(groups.items(), key=lambda x: x[1], reverse=True)
 
     writer.write('%s\t%s\n' % (format(totals, ',').rjust(13, ' '), 'totals'))
     extras = -1
@@ -146,7 +141,7 @@ def print_report(writer, report):
     if extras != -1:
         writer.write('%s\t%s\n' % (format(groups[extras][1], ',').rjust(13, ' '), groups[extras][0]))
 
-    report.sort(lambda x, y: cmp(x.size, y.size), reverse=True)
+    report.sort(key=lambda x: x.size, reverse=True)
     for record in report:
         retry_symbol(record)
 
@@ -157,7 +152,7 @@ def print_report(writer, report):
 
 def merge_report(report):
     merged = []
-    report.sort(lambda x, y: x - y, reverse=True)
+    report.sort(key=lambda x: x.size, reverse=True)
 
     record = report[0]
     for i in range(1, len(report)):

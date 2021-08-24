@@ -78,13 +78,13 @@ Step 5: Analysis
 ##   -r: report path
 ##   -o: output file name
 ##   -s: symbol file dir
-python library/src/main/python/raphael.py -r report -o leak-doubts.txt -s ./symbol/
+python3 library/src/main/python/raphael.py -r report -o leak-doubts.txt -s ./symbol/
 ```
 
 ```shell
 ## analysis maps
 ##   -m: maps file path
-python library/src/main/python/mmap.py -m maps
+python3 library/src/main/python/mmap.py -m maps
 ```
 
 Step 6: Stop monitoring

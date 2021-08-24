@@ -77,7 +77,7 @@ Step 5: Analysis
 ##   -r: 日志路径, 必需，手机端生成的report文件
 ##   -o: 输出文件名，非必需，默认为 leak-doubts.txt
 ##   -s: 符号表目录，非必需，有符号化需求时可传，符号表文件需跟so同名，如：libXXX.so，多个文件需放在同一目录下儿
-python library/src/main/python/raphael.py -r report -o leak-doubts.txt -s ./symbol/
+python3 library/src/main/python/raphael.py -r report -o leak-doubts.txt -s ./symbol/
 
 ## 数据格式说明
 ##  201,852,591	totals // 单指raphael拦截到的未释放的虚拟内存总和
@@ -100,7 +100,7 @@ python library/src/main/python/raphael.py -r report -o leak-doubts.txt -s ./symb
 ```shell
 ## 分析 maps
 ##  -m: maps文件路径，必需
-python library/src/main/python/mmap.py -m maps
+python3 library/src/main/python/mmap.py -m maps
 ```
 
 Step 6: Stop monitoring

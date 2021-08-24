@@ -583,11 +583,6 @@ extern "C" {
             if (trampoline == NULL) return;
         } //if
 
-        // Android 10 .text segment is read-only by default
-        if (0 != __make_rwx(symbol, 5 * sizeof(size_t))) {
-            return;
-        }
-
         trampoline = A64HookFunctionV(symbol, replace, trampoline, A64_MAX_INSTRUCTIONS * 10u);
         if (trampoline == NULL && result != NULL) {
             *result = NULL;

@@ -24,8 +24,8 @@ import subprocess
 
 
 # addr2line environment
-__ARMEABI_ADDR2LINE_FORMAT__ = "arm-linux-androideabi-addr2line -e %s -f %s"
-__AARCH64_ADDR2LINE_FORMAT__ = "aarch64-linux-android-addr2line -e %s -f %s"
+__ARMEABI_ADDR2LINE_FORMAT__ = 'arm-linux-androideabi-addr2line -e %s -f %s'
+__AARCH64_ADDR2LINE_FORMAT__ = 'aarch64-linux-android-addr2line -e %s -f %s'
 
 
 system_group = [
@@ -83,10 +83,17 @@ class Trace:
 
 
 def addr_to_line(address, symbol_path):
-    status, output = subprocess.getstatusoutput('arm-linux-androideabi-addr2line -C -e %s -f %s' % (symbol_path, address))
+    # for aarch64
+    status, output = subprocess.getstatusoutput('aarch64-linux-android-addr2line -C -e %s -f %s' % (symbol_path, address))
     if status != 0:
-        raise Exception('execute [arm-linux-androideabi-addr2line -C -e %s -f %s] failed' % (symbol_path, address))
+        raise Exception('execute [aarch64-linux-android-addr2line -C -e %s -f %s] failed' % (symbol_path, address))
     return output.split('\n')[0]
+
+    # for armeabi and armeabi-v7a
+    # status, output = subprocess.getstatusoutput('arm-linux-androideabi-addr2line -C -e %s -f %s' % (symbol_path, address))
+    # if status != 0:
+    #     raise Exception('execute [arm-linux-androideabi-addr2line -C -e %s -f %s] failed' % (symbol_path, address))
+    # return output.split('\n')[0]
 
 
 def retry_symbol(record):
@@ -103,9 +110,9 @@ def retry_symbol(record):
         symbol = caches.get(frame.pc)
         if not symbol:
             symbol = addr_to_line(frame.pc, symbol_table.get(match.group(1)))
-            caches.update({frame.pc: (symbol if symbol else "unknown")})
+            caches.update({frame.pc: (symbol if symbol else 'unknown')})
 
-        frame.desc = (symbol if symbol else "unknown")
+        frame.desc = (symbol if symbol else 'unknown')
 
 
 def group_record(record):
@@ -182,7 +189,7 @@ def parse_report(string):
 def parse_symbol(path):
     for sub in os.listdir(path):
         if sub.endswith('.so'):
-            symbol_table.update({sub: os.path.abspath(sub)})
+            symbol_table.update({sub: os.path.abspath(path + sub)})
     else:
         print(symbol_table)
 
@@ -196,7 +203,7 @@ if __name__ == '__main__':
     argParams = argParser.parse_args()
 
     if not argParams.report:
-        sys.exit(">>>>>>>> no report file")
+        sys.exit('>>>>>>>> no report file')
 
     if not argParams.symbol:
         symbol_table = {}

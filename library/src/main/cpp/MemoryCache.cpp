@@ -109,7 +109,7 @@ void write_trace(FILE *output, AllocNode *alloc_node, MapData *map_data, void **
 
 MemoryCache::MemoryCache(const char *sdcard) : Cache(sdcard) {
     pthread_mutex_init(&alloc_mutex, NULL);
-    alloc_cache = new AllocPool<AllocNode>(ALLOC_CACHE_SIZE);
+    alloc_cache = new AllocPool(ALLOC_CACHE_SIZE);
 }
 
 MemoryCache::~MemoryCache() {
@@ -168,10 +168,10 @@ void MemoryCache::print() {
         return;
     }
     void *dl_cache = nullptr;
-    MapData map_data = MapData();
+//    MapData map_data = MapData();
     for (auto p : alloc_table) {
         for (; p != nullptr; p = p->next) {
-            write_trace(report, p, &map_data, &dl_cache);
+            write_trace(report, p, nullptr, &dl_cache);
         }
     }
     xdl_addr_clean(&dl_cache);

@@ -34,8 +34,8 @@ private:
     void clean_cache(JNIEnv *env);
     void dump_system(JNIEnv *env);
 private:
-    Cache      *mCache;
-    const char *mSpace;
+    char  *mSpace;
+    Cache *mCache;
 };
 
 #endif //RAPHAEL_H

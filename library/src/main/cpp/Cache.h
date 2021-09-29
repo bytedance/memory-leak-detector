@@ -42,6 +42,13 @@ typedef struct {
     uintptr_t         trace[MAX_TRACE_DEPTH];
 } Backtrace;
 
+struct AllocNode {
+    uint32_t size;
+    uintptr_t addr;
+    uintptr_t trace[MAX_TRACE_DEPTH];
+    AllocNode *next;
+};
+
 class Cache {
 public:
     Cache(const char *space) {this->mSpace = space;}

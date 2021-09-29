@@ -14,47 +14,60 @@
  * limitations under the License.
  */
 
-#ifndef ALLOC_POOL_H
-#define ALLOC_POOL_H
+#ifndef NODE_POOL_H
+#define NODE_POOL_H
 
 #include <atomic>
 #include <stdlib.h>
-
-using namespace std;
-
-template <class T> class AllocPool {
+//**************************************************************************************************
+class AllocPool {
 public:
     AllocPool(size_t count) {
-        masks = count - 1;
-        cache = (T * ) malloc(count * sizeof(T  ));
-        index = (T **) malloc(count * sizeof(T *));
+        mCache = (AllocNode *) malloc(count * sizeof(AllocNode));
+        mCount = count;
     }
 
     ~AllocPool() {
-        delete cache;
-        delete index;
+        free(mCache);
+        mCache = nullptr;
     }
-
+public:
     void reset() {
-        tail.store(0);
-        head.store(0);
+        mIndex.store(0, std::memory_order_relaxed);
+        mStack.store(nullptr, std::memory_order_relaxed);
     }
 
-    T* apply() {
-        uint i = tail.fetch_add(1, memory_order_acquire);
-        return (i <= masks) ? cache + i : index[i & masks];
+    AllocNode* apply() {
+        AllocNode *p = mStack.load(std::memory_order_relaxed);
+        while (p != nullptr) {
+            if (mStack.compare_exchange_weak(p, p->next, std::memory_order_release, std::memory_order_relaxed)) {
+                return p;
+            }
+        }
+
+        uint ii = mIndex.load(std::memory_order_relaxed);
+        while (ii < mCount) {
+            if (mIndex.compare_exchange_weak(ii, ii + 1, std::memory_order_release, std::memory_order_relaxed)) {
+                return mCache + ii;
+            }
+        }
+
+        return nullptr;
     }
 
-    void recycle(T *t) {
-        uint i = head.fetch_add(1, memory_order_acquire);
-        index[i & masks] = t;
+    void recycle(AllocNode *p) {
+        p->next = mStack.load(std::memory_order_relaxed);
+        while (1) {
+            if (mStack.compare_exchange_weak(p->next, p, std::memory_order_release, std::memory_order_relaxed)) {
+                return;
+            }
+        }
     }
 private:
-    uint              masks;
-    std::atomic<uint> tail;
-    std::atomic<uint> head;
-    T *               cache;
-    T **              index;
+    AllocNode *              mCache;
+    size_t                   mCount;
+    std::atomic<uint>        mIndex;
+    std::atomic<AllocNode *> mStack;
 };
-
-#endif //ALLOC_POOL_H
+//**************************************************************************************************
+#endif //NODE_POOL_H

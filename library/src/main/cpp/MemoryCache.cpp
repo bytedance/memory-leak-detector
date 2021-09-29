@@ -134,7 +134,7 @@ void MemoryCache::insert(uintptr_t address, size_t size, Backtrace *backtrace) {
     p->size = size;
     uint depth = backtrace->depth > 2 ? backtrace->depth - 2 : 1;
     memcpy(p->trace, backtrace->trace + 2, depth * sizeof(uintptr_t));
-    p->trace[depth - 1] = 0;
+    p->trace[depth] = 0;
 
     uint16_t alloc_hash = (address >> ADDR_HASH_OFFSET) & 0xFFFF;
     pthread_mutex_lock(&alloc_mutex);

@@ -26,7 +26,8 @@
 void Raphael::start(JNIEnv *env, jobject obj, jint configs, jstring space, jstring regex) {
     const char *string = (char *) env->GetStringUTFChars(space, 0);
     size_t length = strlen(string);
-    mSpace = (char *) malloc(length);
+    mSpace = (char *) malloc(length+1);
+    memset((void *)mSpace, 0, length+1);
     memcpy((void *) mSpace, string, length);
     env->ReleaseStringUTFChars(space, string);
 

@@ -87,7 +87,7 @@ def addr_to_line(address, symbol_path):
     status, output = subprocess.getstatusoutput('aarch64-linux-android-addr2line -C -e %s -f %s' % (symbol_path, address))
     if status != 0:
         raise Exception('execute [aarch64-linux-android-addr2line -C -e %s -f %s] failed' % (symbol_path, address))
-    return output.split('\n')[0]
+    return output.split('\n')[1]
 
     # for armeabi and armeabi-v7a
     # status, output = subprocess.getstatusoutput('arm-linux-androideabi-addr2line -C -e %s -f %s' % (symbol_path, address))

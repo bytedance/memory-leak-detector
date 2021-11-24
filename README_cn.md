@@ -24,7 +24,7 @@ allprojects {
 Step 2: Add the dependency
 ```gradle
 dependencies {
-    implementation 'com.github.bytedance:memory-leak-detector:0.1.7'
+    implementation 'com.github.bytedance:memory-leak-detector:0.1.8'
 }
 ```
 
@@ -125,7 +125,8 @@ adb shell am broadcast -a com.bytedance.raphael.ACTION_STOP -f 0x01000000
 1. 在[GitHub issues](https://github.com/bytedance/memory-leak-detector/issues)上交流
 2. 邮件: <a href="mailto:shentianzhou.stz@gmail.com">shentianzhou.stz@gmail.com</a>
 3. 微信: 429013449
-<p align="left"><img src="docs/wechat.jpg" alt="Wechat group" width="320px"></p>
+4. QQ交流群
+<p align="left"><img src="docs/qqgroup.jpg" alt="QQ Group" width="320px"></p>
 
 ## License
 ~~~

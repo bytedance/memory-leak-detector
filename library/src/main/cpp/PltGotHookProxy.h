@@ -322,7 +322,7 @@ int registerSoLoadProxy(JNIEnv *env, jstring focused) {
 
     if (focused != NULL) {
         const char *focused_reg = (char *) env->GetStringUTFChars(focused, 0);
-        use_regex = regcomp(&focused_regex, focused_reg, REG_NOSUB) == 0;
+        use_regex = regcomp(&focused_regex, focused_reg, REG_EXTENDED|REG_NOSUB) == 0;
         env->ReleaseStringUTFChars(focused, focused_reg);
     }
 

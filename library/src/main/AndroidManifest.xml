@@ -7,7 +7,8 @@
 
     <application>
         <receiver
-            android:name="com.bytedance.raphael.RaphaelReceiver">
+            android:name="com.bytedance.raphael.RaphaelReceiver"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="com.bytedance.raphael.ACTION_START" />

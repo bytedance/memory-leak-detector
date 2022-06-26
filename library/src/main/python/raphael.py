@@ -21,7 +21,7 @@ import os
 
 import argparse
 import subprocess
-
+from functools import cmp_to_key
 
 # addr2line environment
 __ARMEABI_ADDR2LINE_FORMAT__ = 'arm-linux-androideabi-addr2line -e %s -f %s'
@@ -159,7 +159,7 @@ def print_report(writer, report):
 
 def merge_report(report):
     merged = []
-    report.sort(key=lambda x: x.size, reverse=True)
+    report.sort(key=cmp_to_key(lambda x1, x2: x1 - x2))
 
     record = report[0]
     for i in range(1, len(report)):
@@ -170,6 +170,7 @@ def merge_report(report):
             merged.append(record)
             record = report[i]
     merged.append(record)
+    merged.sort(key=lambda x: x.size, reverse=True)
     return merged
 
 

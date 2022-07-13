@@ -175,7 +175,7 @@ void MemoryCache::print() {
             write_trace(report, p, nullptr, &dl_cache);
         }
     }
-    pthread_mutex_lock(&alloc_mutex);
+    pthread_mutex_unlock(&alloc_mutex);
 
     xdl_addr_clean(&dl_cache);
     fclose(report);

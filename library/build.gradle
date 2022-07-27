@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 28
@@ -35,5 +34,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.github.User:Repo:Tag'
     implementation 'com.android.support:support-annotations:28.0.0'
 }

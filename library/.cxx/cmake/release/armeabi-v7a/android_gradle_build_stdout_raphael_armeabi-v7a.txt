@@ -1,0 +1,47 @@
+ninja: Entering directory `/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a'
+[1/20] Building C object CMakeFiles/raphael.dir/src/main/xHook/xh_log.c.o
+[2/20] Building C object CMakeFiles/raphael.dir/src/main/unwind32/backtrace-helper.c.o
+[3/20] Building C object CMakeFiles/raphael.dir/src/main/unwind32/backtrace.c.o
+../../../../src/main/unwind32/backtrace.c:37:14: warning: implicit declaration of function 'unwind_backtrace_signal_arch_selfnogcc' is invalid in C99 [-Wimplicit-function-declaration]
+    frames = unwind_backtrace_signal_arch_selfnogcc(milist, backtrace, ignore_depth, max_depth);
+             ^
+1 warning generated.
+[4/20] Building C object CMakeFiles/raphael.dir/src/main/unwind32/map_info.c.o
+[5/20] Building C object CMakeFiles/raphael.dir/src/main/xDL/xdl_util.c.o
+[6/20] Building C object CMakeFiles/raphael.dir/src/main/xDL/xdl_lzma.c.o
+[7/20] Building C object CMakeFiles/raphael.dir/src/main/unwind32/ptrace.c.o
+[8/20] Building C object CMakeFiles/raphael.dir/src/main/inline32/inlineHook.c.o
+[9/20] Building C object CMakeFiles/raphael.dir/src/main/xDL/xdl_iterate.c.o
+[10/20] Building C object CMakeFiles/raphael.dir/src/main/xHook/xh_util.c.o
+[11/20] Building C object CMakeFiles/raphael.dir/src/main/inline32/relocate.c.o
+../../../../src/main/inline32/relocate.c:244:25: warning: operator '<<' has lower precedence than '+'; '+' will be evaluated first [-Wshift-op-parentheses]
+                        value = ALIGN_PC(pc) + (instruction & 0xFF) << 2;
+                                ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~ ~~
+../../../../src/main/inline32/relocate.c:244:25: note: place parentheses around the '+' expression to silence this warning
+                        value = ALIGN_PC(pc) + (instruction & 0xFF) << 2;
+                                ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+../../../../src/main/inline32/relocate.c:615:18: warning: & has lower precedence than ==; == will be evaluated first [-Wparentheses]
+        if (target_addr & 1 == 1) {
+                        ^~~~~~~~
+../../../../src/main/inline32/relocate.c:615:18: note: place parentheses around the '==' expression to silence this warning
+        if (target_addr & 1 == 1) {
+                        ^
+                          (     )
+../../../../src/main/inline32/relocate.c:615:18: note: place parentheses around the & expression to evaluate it first
+        if (target_addr & 1 == 1) {
+                        ^
+            (              )
+2 warnings generated.
+[12/20] Building C object CMakeFiles/raphael.dir/src/main/unwind32/backtrace-arm.c.o
+[13/20] Building C object CMakeFiles/raphael.dir/src/main/xDL/xdl.c.o
+[14/20] Building C object CMakeFiles/raphael.dir/src/main/xHook/xh_core.c.o
+[15/20] Building CXX object CMakeFiles/raphael.dir/src/main/cpp/xloader.cpp.o
+clang++: warning: -Wl,--hash-style=sysv: 'linker' input unused [-Wunused-command-line-argument]
+[16/20] Building C object CMakeFiles/raphael.dir/src/main/xHook/xh_elf.c.o
+[17/20] Building CXX object CMakeFiles/raphael.dir/src/main/cpp/Raphael.cpp.o
+clang++: warning: -Wl,--hash-style=sysv: 'linker' input unused [-Wunused-command-line-argument]
+[18/20] Building CXX object CMakeFiles/raphael.dir/src/main/cpp/MemoryCache.cpp.o
+clang++: warning: -Wl,--hash-style=sysv: 'linker' input unused [-Wunused-command-line-argument]
+[19/20] Building CXX object CMakeFiles/raphael.dir/src/main/cpp/MapData.cpp.o
+clang++: warning: -Wl,--hash-style=sysv: 'linker' input unused [-Wunused-command-line-argument]
+[20/20] Linking CXX shared library ../../../../build/intermediates/cmake/release/obj/armeabi-v7a/libraphael.so

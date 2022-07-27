@@ -15,11 +15,6 @@ android {
                 arguments "-DANDROID_ARM_MODE=arm", "-DANDROID_STL=c++_static"
             }
         }
-
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
     }
 
     buildTypes {
@@ -41,4 +36,17 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:support-annotations:28.0.0'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.bytedance'
+                artifactId = 'memory-leak-detector'
+                version = '0.1.9.4'
+            }
+        }
+    }
 }

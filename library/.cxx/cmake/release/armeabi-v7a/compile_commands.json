@@ -1,0 +1,115 @@
+[
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/inline32/relocate.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/inline32/relocate.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/inline32/relocate.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/inline32/inlineHook.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/inline32/inlineHook.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/inline32/inlineHook.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/unwind32/backtrace.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/backtrace.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/backtrace.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/unwind32/map_info.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/map_info.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/map_info.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/unwind32/backtrace-arm.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/backtrace-arm.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/backtrace-arm.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/unwind32/ptrace.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/ptrace.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/ptrace.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/unwind32/backtrace-helper.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/backtrace-helper.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/unwind32/backtrace-helper.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xDL/xdl.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xDL/xdl_iterate.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl_iterate.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl_iterate.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xDL/xdl_lzma.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl_lzma.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl_lzma.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xDL/xdl_util.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl_util.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xDL/xdl_util.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xHook/xh_core.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_core.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_core.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xHook/xh_elf.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_elf.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_elf.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xHook/xh_log.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_log.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_log.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/xHook/xh_util.c.o   -c /Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_util.c",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/xHook/xh_util.c"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -fvisibility=hidden -std=c++11 -Werror=return-type -Wl,--hash-style=sysv -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/cpp/MemoryCache.cpp.o -c /Users/shentianzhou/Downloads/raphael/library/src/main/cpp/MemoryCache.cpp",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/cpp/MemoryCache.cpp"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -fvisibility=hidden -std=c++11 -Werror=return-type -Wl,--hash-style=sysv -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/cpp/MapData.cpp.o -c /Users/shentianzhou/Downloads/raphael/library/src/main/cpp/MapData.cpp",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/cpp/MapData.cpp"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -fvisibility=hidden -std=c++11 -Werror=return-type -Wl,--hash-style=sysv -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/cpp/Raphael.cpp.o -c /Users/shentianzhou/Downloads/raphael/library/src/main/cpp/Raphael.cpp",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/cpp/Raphael.cpp"
+},
+
+{
+  "directory": "/Users/shentianzhou/Downloads/raphael/library/.cxx/cmake/release/armeabi-v7a",
+  "command": "/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi16 --gcc-toolchain=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/shentianzhou/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Draphael_EXPORTS -I../../../../src/main/inline32 -I../../../../src/main/inline64 -I../../../../src/main/xDL -I../../../../src/main/xHook -I../../../../src/main/cpp -I../../../../src/main/unwind32 -I../../../../src/main/unwind64  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -Wformat -Werror=format-security  -fvisibility=hidden -std=c++11 -Werror=return-type -Wl,--hash-style=sysv -O2 -DNDEBUG  -fPIC   -o CMakeFiles/raphael.dir/src/main/cpp/xloader.cpp.o -c /Users/shentianzhou/Downloads/raphael/library/src/main/cpp/xloader.cpp",
+  "file": "/Users/shentianzhou/Downloads/raphael/library/src/main/cpp/xloader.cpp"
+}
+]

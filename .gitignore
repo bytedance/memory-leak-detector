@@ -23,6 +23,7 @@ build/
 */build/
 */.externalNativeBuild/
 */.DS_Store
+*/.cxx/
 
 # Local configuration file (sdk path, etc)
 local.properties

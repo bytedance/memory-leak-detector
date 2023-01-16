@@ -168,30 +168,20 @@ static int ubrd_get_main_thread_stack()
 			return 0;
 		}
 	}
-	fclose(fd);
 
+	fclose(fd);
+	return -1;
+}
+
+static void ubrd_get_thread_stack() {
+	if (gettid() == getpid() && 0 == ubrd_get_main_thread_stack()) {
+		return;
+	}
 	pthread_attr_t attr;
 	pthread_getattr_np(pthread_self(), &attr);
 
 	thread_stack_start = (size_t)attr.stack_base + attr.stack_size;
 	thread_stack_end = (size_t)attr.stack_base;
-	LIBUDF_LOG("[LCH_DEBUG]thread_stack_start:%p, thread_stack_end:%p\n", (void *)thread_stack_start, (void *)thread_stack_end);
-
-	return 0;
-}
-
-static void ubrd_get_thread_stack() {
-	if (gettid() == getpid()) {
-		if (ubrd_get_main_thread_stack()) {
-			LIBUDF_LOG("get_main_thread_stack fail\n");
-		}
-	} else {
-		pthread_attr_t attr;
-		pthread_getattr_np(pthread_self(), &attr);
-
-		thread_stack_start = (size_t)attr.stack_base + attr.stack_size;
-		thread_stack_end = (size_t)attr.stack_base;
-	}
 }
 
 static void ubrd_get_stack(size_t* stack_start, size_t* stack_end) {

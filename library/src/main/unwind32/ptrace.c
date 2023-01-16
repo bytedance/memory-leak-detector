@@ -103,9 +103,10 @@ bool try_get_word(const memory_t* memory, uintptr_t ptr, uint32_t* out_value)
 #define UNLIKELY(cond) __builtin_expect(!!(cond), 0)
 #define TLSVAR __thread __attribute__((tls_model("initial-exec")))
 
-#define STACK_SIZE (8 * 1024 * 1024)
+#define THREAD_STACK_SIZE (8 * 1024 * 1024)
 
-static TLSVAR size_t stack_bottom = 0;
+static TLSVAR size_t thread_stack_start = 0;
+static TLSVAR size_t thread_stack_end = 0;
 static TLSVAR pthread_once_t once_control_tls = PTHREAD_ONCE_INIT;
 
 static int ubrd_get_main_thread_stack()
@@ -137,8 +138,9 @@ static int ubrd_get_main_thread_stack()
 			line[17] = '\0'; //line[9~16] 32bit main thread stack start
 			stack_start = (const char*)&line[7];
 #endif
-			stack_bottom = strtoul(stack_start, (char **)NULL, 16);
-			LIBUDF_LOG("[LCH_DEBUG]stack_bottom::%p\n", (void *)stack_bottom);
+			thread_stack_start = strtoul(stack_start, (char **)NULL, 16);
+			thread_stack_end = thread_stack_start - THREAD_STACK_SIZE;
+			LIBUDF_LOG("[LCH_DEBUG]thread_stack_start:%p, thread_stack_end:%p\n", (void *)thread_stack_start, (void *)thread_stack_end);
 			fclose(fd);
 			return 0;
 		}
@@ -154,26 +156,31 @@ static int ubrd_get_main_thread_stack()
 
 	if (fgets(line, sizeof(line), fd)) {
 		const char *end_of_comm = strrchr((const char *)line, (int)')');
-		if (end_of_comm != NULL) {
-			size_t stack_start = 0;
-			if (1 == sscanf(end_of_comm + 1,
-							" %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %*u %*u %*d %*d %*d %*d %*d %*d %*u %*u "
-							"%*d %*u %*u %*u %" SCNuPTR,
-						&stack_start)) {
-				stack_bottom = stack_start;
-				LIBUDF_LOG("[LCH_DEBUG]stack_bottom::%p\n", (void *) stack_bottom);
-				fclose(fd);
-				return 0;
-			}
+		size_t stack_start = 0;
+		if (1 == sscanf(end_of_comm + 1,
+						" %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %*u %*u %*d %*d %*d %*d %*d %*d %*u %*u "
+						"%*d %*u %*u %*u %" SCNuPTR,
+					&stack_start)) {
+			thread_stack_start = stack_start;
+			thread_stack_end = thread_stack_start - THREAD_STACK_SIZE;
+			LIBUDF_LOG("[LCH_DEBUG]thread_stack_start:%p, thread_stack_end:%p\n", (void *)thread_stack_start, (void *)thread_stack_end);
+			fclose(fd);
+			return 0;
 		}
 	}
-
 	fclose(fd);
-	return -1;
+
+	pthread_attr_t attr;
+	pthread_getattr_np(pthread_self(), &attr);
+
+	thread_stack_start = (size_t)attr.stack_base + attr.stack_size;
+	thread_stack_end = (size_t)attr.stack_base;
+	LIBUDF_LOG("[LCH_DEBUG]thread_stack_start:%p, thread_stack_end:%p\n", (void *)thread_stack_start, (void *)thread_stack_end);
+
+	return 0;
 }
 
-
-static void get_stack_bottom() {
+static void ubrd_get_thread_stack() {
 	if (gettid() == getpid()) {
 		if (ubrd_get_main_thread_stack()) {
 			LIBUDF_LOG("get_main_thread_stack fail\n");
@@ -182,29 +189,30 @@ static void get_stack_bottom() {
 		pthread_attr_t attr;
 		pthread_getattr_np(pthread_self(), &attr);
 
-		stack_bottom = (size_t)attr.stack_base;
+		thread_stack_start = (size_t)attr.stack_base + attr.stack_size;
+		thread_stack_end = (size_t)attr.stack_base;
 	}
 }
 
-static void ubrd_get_stack(size_t* bottom, size_t* top) {
-	pthread_once(&once_control_tls, get_stack_bottom);
+static void ubrd_get_stack(size_t* stack_start, size_t* stack_end) {
+	pthread_once(&once_control_tls, ubrd_get_thread_stack);
 
 	stack_t ss;
 	if (UNLIKELY(sigaltstack(NULL, &ss) == 0 && (ss.ss_flags & SS_ONSTACK) != 0 )) {
-		*bottom = (size_t)ss.ss_sp;
-		*top = (size_t)ss.ss_sp + ss.ss_size;
+		*stack_start = (size_t)ss.ss_sp + ss.ss_size;
+		*stack_end = (size_t)ss.ss_sp;
 	} else {
-		*bottom = stack_bottom;
-		*top = stack_bottom + STACK_SIZE;
+		*stack_start = thread_stack_start;
+		*stack_end = thread_stack_end;
 	}
 }
 
 bool try_get_word_stack(uintptr_t ptr, uint32_t* out_value)
 {
-	size_t bottom = 0, top = 0;
-	ubrd_get_stack(&bottom, &top);
+	size_t sstart = 0, send = 0;
+	ubrd_get_stack(&sstart, &send);
 
-	if ((ptr >= bottom) && (ptr <= top)) {
+	if ((ptr >= send) && (ptr <= sstart)) {
 		*out_value = *(uint32_t*)ptr;
 		return true;
 	}

@@ -25,6 +25,7 @@ b * limitations under the License.
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "ptrace-arch.h"
 #include "libudf_unwind_p.h"
@@ -99,157 +100,113 @@ bool try_get_word(const memory_t* memory, uintptr_t ptr, uint32_t* out_value)
     }
 }
 
-static size_t _main_thread_stack_start = 0;
-static size_t _main_thread_stack_size = 0;
-static pid_t ubrd_pid;
+#define UNLIKELY(cond) __builtin_expect(!!(cond), 0)
+#define TLSVAR __thread __attribute__((tls_model("initial-exec")))
 
-static int ubrd_get_main_thread_stack(pid_t pid)
+#define STACK_SIZE (8 * 1024 * 1024)
+
+static TLSVAR size_t stack_bottom = 0;
+static TLSVAR pthread_once_t once_control_tls = PTHREAD_ONCE_INIT;
+
+static int ubrd_get_main_thread_stack()
 {
-    char c, line[1024];
-    int i = 0, j = 0, fd = -1;
-    void* lib = NULL;
-	int (*close_fptr)(int) = NULL; //use func ptr to avoid open/close rehook deadlock
-	int (*open_fptr)(const char *, int, ...) = NULL;
-
-	lib = dlopen("libc.so", RTLD_NOW|RTLD_GLOBAL);
-	if (lib == NULL) {
-		LIBUDF_LOG("Could not open libc.so: %s\n", dlerror());
+	FILE* fd = fopen("/proc/self/maps", "r");
+	if (fd == NULL) {
+		LIBUDF_LOG("/proc/self/maps open fail\n");
 		return -1;
 	}
 
-	close_fptr = (int (*)(int))dlsym(lib, "close");
-	open_fptr = (int (*)(const char *, int, ...))dlsym(lib, "open");
-	if (!close_fptr || !open_fptr) {
-		LIBUDF_LOG("invalid open/close: %s\n", dlerror());
-		dlclose(lib);
+	char line[1024];
+
+	while (fgets(line, sizeof(line), fd)) {
+		if (strstr(line, "[stack]") != NULL) {
+			LIBUDF_LOG("stack:%s\n", line);
+			const char* stack_start;
+#if defined(__LP64__)
+			//64bit main stack format
+            //7ff1bf1000-7ff1c12000 rw-p 00000000 00:00 0                              [stack]
+            line[9] = '0';
+            line[10] = 'x';
+            line[21] = '\0'; //line[11~20] stack start
+            stack_start = (const char*)&line[9];
+#else
+			//32bit main stack format
+			//becd7000-becf8000 rw-p 00000000 00:00 0          [stack]
+			line[7] = '0';
+			line[8] = 'x';
+			line[17] = '\0'; //line[9~16] 32bit main thread stack start
+			stack_start = (const char*)&line[7];
+#endif
+			stack_bottom = strtoul(stack_start, (char **)NULL, 16);
+			LIBUDF_LOG("[LCH_DEBUG]stack_bottom::%p\n", (void *)stack_bottom);
+			fclose(fd);
+			return 0;
+		}
+	}
+	fclose(fd);
+
+	// stack is 28th parameter from /proc/self/stat
+	fd = fopen("/proc/self/stat", "re");
+	if (fd == NULL) {
+		LIBUDF_LOG("/proc/self/stat open fail\n");
 		return -1;
 	}
 
-	snprintf(line, sizeof(line), "/proc/self/task/%d/maps", pid);
-
-	fd = open_fptr(line, O_RDONLY);
-	if (fd < 0) {
-		LIBUDF_LOG("/proc/%d/task/%d/maps open fail\n", pid, pid);
-		dlclose(lib);
-		return -1;
-	}
-
-	while (1) {
-		if (!read(fd, &c, 1)) break;
-		if (c == '\n') {
-			line[i] = '\0';
-			if (strncmp((const char *)&line[i-7], "[stack]", 7) == 0) {
-				const char* stack_start;
-				LIBUDF_LOG("stack:%s\n", line);
-			#if defined(__LP64__)
-				//64bit main stack format
-				//7ff1bf1000-7ff1c12000 rw-p 00000000 00:00 0                              [stack]
-				line[9] = '0';
-				line[10] = 'x';
-				line[21] = '\0'; //line[11~20] stack start
-				stack_start = (const char*)&line[9];
-			#else
-				//32bit main stack format
-				//becd7000-becf8000 rw-p 00000000 00:00 0          [stack]
-				line[7] = '0';
-				line[8] = 'x';
-				line[17] = '\0'; //line[9~16] 32bit main thread stack start
-				stack_start = (const char*)&line[7];
-			#endif
-				_main_thread_stack_start = strtoul(stack_start, (char **)NULL, 16);
-				_main_thread_stack_size = 8 * 1024 * 1024; //bypass RLIMIT check for simple handling
-				LIBUDF_LOG("[LCH_DEBUG]main_thread_stack_start:%p, main_thread_stack_size:%p\n",
-					   (void *)_main_thread_stack_start, (void *)_main_thread_stack_size);
-				close_fptr(fd);
-				dlclose(lib);
+	if (fgets(line, sizeof(line), fd)) {
+		const char *end_of_comm = strrchr((const char *)line, (int)')');
+		if (end_of_comm != NULL) {
+			size_t stack_start = 0;
+			if (1 == sscanf(end_of_comm + 1,
+							" %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %*u %*u %*d %*d %*d %*d %*d %*d %*u %*u "
+							"%*d %*u %*u %*u %" SCNuPTR,
+						&stack_start)) {
+				stack_bottom = stack_start;
+				LIBUDF_LOG("[LCH_DEBUG]stack_bottom::%p\n", (void *) stack_bottom);
+				fclose(fd);
 				return 0;
 			}
-			else {
-				i = 0;
-			}
-		}
-		else {
-			line[i++] = c;
 		}
 	}
-    close_fptr(fd);
 
-    // stack is 28th parameter from /proc/self/stat
-    fd = open_fptr("/proc/self/stat", O_RDONLY);
-    if (fd < 0) {
-         LIBUDF_LOG("/proc/self/stat open fail\n");
-        dlclose(lib);
-        return -1;
-    }
-
-    i = j = 0;
-    line[0] = '\0';
-    while (1) {
-        if (!read(fd, &c, 1)) break;
-        if (c == ' ') {
-            j++;
-            if (j == 28) {
-                line[i] = '\0';
-                break;
-            }
-        }
-        else if (j == 27) {
-            line[i++] = c;
-        }
-    }
-
-    if (line[0] != '\0') {
-        _main_thread_stack_start =  strtoul(line, (char **)NULL, 10);
-        _main_thread_stack_size = 8 * 1024 * 1024;  // bypass RLIMIT check for simple handling
-        LIBUDF_LOG("[LCH_DEBUG]main_thread_stack_start:%p, main_thread_stack_size:%p\n",
-                (void *)_main_thread_stack_start, (void *)_main_thread_stack_size);
-        close_fptr(fd);
-        dlclose(lib);
-        return 0;
-    }
-
-	close_fptr(fd);
-	dlclose(lib);
+	fclose(fd);
 	return -1;
 }
 
-//return 0: success, -1 fail
-static int ubrd_get_stack(size_t* pthread_stack_start, size_t* pthread_stack_end) {
-	pid_t pid = getpid();
 
-	if (pid != ubrd_pid) {
-		LIBUDF_LOG("old pid:%d, new pid:%d\n", ubrd_pid, pid);
-		ubrd_pid = pid;
-		_main_thread_stack_start = 0; // reset for new process
-		_main_thread_stack_size = 0;
-	}
-
-	if (gettid() == pid) {
-		if (!_main_thread_stack_start) {
-			if (ubrd_get_main_thread_stack(pid)) {
-				LIBUDF_LOG("get_main_thread_stack fail\n");
-				return -1;
-			}
+static void get_stack_bottom() {
+	if (gettid() == getpid()) {
+		if (ubrd_get_main_thread_stack()) {
+			LIBUDF_LOG("get_main_thread_stack fail\n");
 		}
-		*pthread_stack_start = _main_thread_stack_start;
-		*pthread_stack_end = _main_thread_stack_start - _main_thread_stack_size;
-	}
-	else {
+	} else {
 		pthread_attr_t attr;
 		pthread_getattr_np(pthread_self(), &attr);
-		*pthread_stack_start = (size_t)attr.stack_base + attr.stack_size;
-		*pthread_stack_end = (size_t)attr.stack_base;
+
+		stack_bottom = (size_t)attr.stack_base;
 	}
-	return 0;
+}
+
+static void ubrd_get_stack(size_t* bottom, size_t* top) {
+	pthread_once(&once_control_tls, get_stack_bottom);
+
+	stack_t ss;
+	if (UNLIKELY(sigaltstack(NULL, &ss) == 0 && (ss.ss_flags & SS_ONSTACK) != 0 )) {
+		*bottom = (size_t)ss.ss_sp;
+		*top = (size_t)ss.ss_sp + ss.ss_size;
+	} else {
+		*bottom = stack_bottom;
+		*top = stack_bottom + STACK_SIZE;
+	}
 }
 
 bool try_get_word_stack(uintptr_t ptr, uint32_t* out_value)
 {
-    size_t sstart = 0, send = 0;
-    ubrd_get_stack(&sstart, &send);
-    if ((ptr >= send) && (ptr <= sstart)) {
-        *out_value = *(uint32_t*)ptr;
-	return true;
-    }
-    return false;
+	size_t bottom = 0, top = 0;
+	ubrd_get_stack(&bottom, &top);
+
+	if ((ptr >= bottom) && (ptr <= top)) {
+		*out_value = *(uint32_t*)ptr;
+		return true;
+	}
+	return false;
 }

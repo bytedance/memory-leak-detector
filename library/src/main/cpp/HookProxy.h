@@ -207,11 +207,16 @@ static int munmap_proxy(void *address, size_t size) {
 
 static void pthread_exit_proxy(void *value) {
     pthread_attr_t attr;
+    int detach_state;
     if (isVss && pthread_getattr_np(pthread_self(), &attr) == 0) {
-        pthread_setspecific(guard, (void *) 1);
-        cache->remove((uintptr_t) attr.stack_base);
-        pthread_attr_destroy(&attr);
-        pthread_setspecific(guard, (void *) 0);
+        pthread_attr_getdetachstate(&attr, &detach_state);
+        // if current thread state is PTHREAD_CREATE_DETACHED,we should remove stack_base in cache
+        if (detach_state == PTHREAD_CREATE_DETACHED){
+            pthread_setspecific(guard, (void *) 1);
+            cache->remove((uintptr_t) attr.stack_base);
+            pthread_attr_destroy(&attr);
+            pthread_setspecific(guard, (void *) 0);
+        }
     }
     pthread_exit_origin(value);
 }

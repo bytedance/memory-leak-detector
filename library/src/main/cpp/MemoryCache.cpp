@@ -45,8 +45,19 @@ inline AllocNode *remove_alloc(AllocNode **header, uintptr_t address) {
     }
 }
 
+inline const char* get_func_name(ALLOC_FUNC func) {
+    switch(func) {
+        case MALLOC: return "malloc";
+        case CALLOC: return "calloc";
+        case REALLOC: return "realloc";
+        case MEMALIGN: return "memalign";
+        case MMAP: return "mmap";
+        case MMAP64: return "mmap64";
+    }
+}
+
 void write_trace(FILE *output, AllocNode *alloc_node, MapData *map_data, void **dl_cache) {
-    fprintf(output, STACK_FORMAT_HEADER, alloc_node->addr, alloc_node->size);
+    fprintf(output, STACK_FORMAT_HEADER, alloc_node->addr, alloc_node->size, get_func_name(alloc_node->func));
     for (int i = 0; alloc_node->trace[i] != 0; i++) {
         uintptr_t pc = alloc_node->trace[i];
         Dl_info info;
@@ -123,7 +134,7 @@ void MemoryCache::reset() {
     }
 }
 
-void MemoryCache::insert(uintptr_t address, size_t size, Backtrace *backtrace) {
+void MemoryCache::insert(uintptr_t address, size_t size, ALLOC_FUNC func, Backtrace *backtrace) {
     AllocNode *p = alloc_cache->apply();
     if (p == nullptr) {
         LOGGER("Alloc cache is full!!!!!!!!");
@@ -132,6 +143,7 @@ void MemoryCache::insert(uintptr_t address, size_t size, Backtrace *backtrace) {
 
     p->addr = address;
     p->size = size;
+    p->func = func;
     uint depth = backtrace->depth > 2 ? backtrace->depth - 2 : 1;
     memcpy(p->trace, backtrace->trace + 2, depth * sizeof(uintptr_t));
     p->trace[depth] = 0;

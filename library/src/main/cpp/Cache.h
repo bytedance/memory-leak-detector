@@ -42,9 +42,19 @@ typedef struct {
     uintptr_t         trace[MAX_TRACE_DEPTH];
 } Backtrace;
 
+enum ALLOC_FUNC {
+    MALLOC,
+    CALLOC,
+    REALLOC,
+    MEMALIGN,
+    MMAP,
+    MMAP64
+};
+
 struct AllocNode {
     uint32_t size;
     uintptr_t addr;
+    ALLOC_FUNC  func;
     uintptr_t trace[MAX_TRACE_DEPTH];
     AllocNode *next;
 };
@@ -55,7 +65,7 @@ public:
     virtual ~Cache() {}
 public:
     virtual void reset() = 0;
-    virtual void insert(uintptr_t address, size_t size, Backtrace *backtrace) = 0;
+    virtual void insert(uintptr_t address, size_t size, ALLOC_FUNC func, Backtrace *backtrace) = 0;
     virtual void remove(uintptr_t address) = 0;
     virtual void print() = 0;
 protected:

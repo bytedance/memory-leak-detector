@@ -59,14 +59,17 @@ class Frame:
 
 
 class Trace:
-    def __init__(self, id, size, count, stack):
+    def __init__(self, id, size, func, count, stack):
         self.id    = id
         self.size  = int(size)
+        self.func  = func
         self.count = int(count)
         self.stack = stack
 
     def __eq__(self, b):
         if len(self.stack) != len(b.stack):
+            return False
+        if self.func != b.func:
             return False
         for i in range(0, len(self.stack)):
             if self.stack[i] != b.stack[i]:
@@ -152,7 +155,7 @@ def print_report(writer, report):
     for record in report:
         retry_symbol(record)
 
-        writer.write('\n%s, %s, %s\n' % (record.id, record.size, record.count))
+        writer.write('\n%s, %s, %s, %s\n' % (record.id, record.size, record.func, record.count))
         for frame in record.stack:
             writer.write('%s %s (%s)\n' % (frame.pc, frame.path, frame.desc))
 
@@ -182,8 +185,8 @@ def parse_report(string):
         stack = []
         for frame in match:
             stack.append(Frame(frame[0], frame[1], frame[2]))
-        match = re.compile(r'(0x[0-9a-f]+),\ (\d+),\ (\d+)$', re.M | re.I).findall(split)
-        report.append(Trace(match[0][0], match[0][1], match[0][2], stack))
+        match = re.compile(r'(0x[0-9a-f]+),\ (\d+),\ (\S+),\ (\d+)$', re.M | re.I).findall(split)
+        report.append(Trace(match[0][0], match[0][1], match[0][2], match[0][3], stack))
     return report
 
 

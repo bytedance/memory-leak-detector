@@ -16,92 +16,83 @@
 
 #include <cstring>
 #include <dirent.h>
-
+#include "Cache.h"
 #include "Raphael.h"
 #include "HookProxy.h"
 #include "MemoryCache.h"
 #include "PltGotHookProxy.h"
 
 //**************************************************************************************************
-void Raphael::start(JNIEnv *env, jobject obj, jint configs, jstring space, jstring regex) {
-    const char *string = (char *) env->GetStringUTFChars(space, 0);
-    size_t length = strlen(string);
-    mSpace = (char *) malloc(length+1);
-    memset((void *)mSpace, 0, length+1);
-    memcpy((void *) mSpace, string, length);
-    env->ReleaseStringUTFChars(space, string);
-
-    mCache = new MemoryCache(mSpace);
+void Raphael::start(int configs, const char* space, const char* regex) {
+    mSpace = space;
+    mCache = new MemoryCache(mSpace.c_str());
     update_configs(mCache, 0);
 
     if (regex != nullptr) {
-        registerSoLoadProxy(env, regex);
+        registerSoLoadProxy(regex);
     } else {
-        registerInlineProxy(env);
+        registerInlineProxy();
     }
 
     mCache->reset();
     pthread_key_create(&guard, nullptr);
-    LOGGER("start >>> %#x, %s", (uint) configs, mSpace);
+    LOGGER("start >>> %#x, %s", (uint) configs, mSpace.c_str());
     update_configs(mCache, configs);
 }
 
-void Raphael::stop(JNIEnv *env, jobject obj) {
+void Raphael::stop() {
     update_configs(nullptr, 0);
-    print(env, obj);
+    print();
 
     delete mCache;
     mCache = nullptr;
 
     xh_core_clear();
     pthread_key_delete(guard);
-    LOGGER("stop >>> %s", mSpace);
-
-    delete mSpace;
-    mSpace = nullptr;
+    LOGGER("stop >>> %s", mSpace.c_str());
 }
 
-void Raphael::print(JNIEnv *env, jobject obj) {
+void Raphael::print() {
     pthread_setspecific(guard, (void *) 1);
 
-    clean_cache(env);
+    clean_cache();
     mCache->print();
-    dump_system(env);
+    dump_system();
 
-    LOGGER("print >>> %s", mSpace);
+    LOGGER("print >>> %s", mSpace.c_str());
     pthread_setspecific(guard, (void *) 0);
 }
 
-void Raphael::clean_cache(JNIEnv *env) {
+void Raphael::clean_cache() {
     DIR *pDir;
     struct dirent *pDirent;
 
     char path[MAX_BUFFER_SIZE];
-    if ((pDir = opendir(mSpace)) != NULL) {
+    if ((pDir = opendir(mSpace.c_str())) != NULL) {
         while ((pDirent = readdir(pDir)) != NULL) {
             if (strcmp(pDirent->d_name, ".") != 0 && strcmp(pDirent->d_name, "..") != 0) {
-                if (snprintf(path, MAX_BUFFER_SIZE, "%s/%s", mSpace, pDirent->d_name) < MAX_BUFFER_SIZE) {
+                if (snprintf(path, MAX_BUFFER_SIZE, "%s/%s", mSpace.c_str(), pDirent->d_name) < MAX_BUFFER_SIZE) {
                     remove(path);
                 }
             }
         }
         closedir(pDir);
-    } else if (mkdir(mSpace, 777) != 0) {
-        LOGGER("create %s failed, please check permissions", mSpace);
+    } else if (mkdir(mSpace.c_str(), 777) != 0) {
+        LOGGER("create %s failed, please check permissions", mSpace.c_str());
     } else {
-        LOGGER("create %s success", mSpace);
+        LOGGER("create %s success", mSpace.c_str());
     }
 }
 
-void Raphael::dump_system(JNIEnv *env) {
+void Raphael::dump_system() {
     char path[MAX_BUFFER_SIZE];
-    if (snprintf(path, MAX_BUFFER_SIZE, "%s/maps", mSpace) >= MAX_BUFFER_SIZE) {
+    if (snprintf(path, MAX_BUFFER_SIZE, "%s/maps", mSpace.c_str()) >= MAX_BUFFER_SIZE) {
         return;
     }
 
     FILE *target = fopen(path, "w");
     if (target == nullptr) {
-        LOGGER("dump maps failed, can't open %s/maps", mSpace);
+        LOGGER("dump maps failed, can't open %s/maps", mSpace.c_str());
         return;
     }
 

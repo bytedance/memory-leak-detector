@@ -17,24 +17,27 @@
 #ifndef RAPHAEL_H
 #define RAPHAEL_H
 
-#include <jni.h>
-#include "Cache.h"
+#include <string>
+
+
+#define RAPHAEL_API __attribute__((visibility("default")))
+
 
 #define MAP64_MODE 0x00800000
 #define ALLOC_MODE 0x00400000
 #define DEPTH_MASK 0x001F0000
 #define LIMIT_MASK 0x0000FFFF
-
-class Raphael {
+class Cache;
+class RAPHAEL_API Raphael {
 public:
-    void start(JNIEnv *env, jobject obj, jint configs, jstring space, jstring regex);
-    void stop(JNIEnv *env, jobject obj);
-    void print(JNIEnv *env, jobject obj);
+    void start(int configs, const char* space, const char* regex);
+    void stop();
+    void print();
 private:
-    void clean_cache(JNIEnv *env);
-    void dump_system(JNIEnv *env);
+    void clean_cache();
+    void dump_system();
 private:
-    char  *mSpace;
+    std::string mSpace;
     Cache *mCache;
 };
 

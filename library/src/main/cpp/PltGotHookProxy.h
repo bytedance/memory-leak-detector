@@ -317,13 +317,12 @@ static void try_pltgot_hook_on_soload(const char *filename) {
     }
 }
 
-int registerSoLoadProxy(JNIEnv *env, jstring focused) {
+int registerSoLoadProxy(const char* focused) {
     api_level = android_get_device_api_level();
 
     if (focused != NULL) {
-        const char *focused_reg = (char *) env->GetStringUTFChars(focused, 0);
+        const char *focused_reg = focused;
         use_regex = regcomp(&focused_regex, focused_reg, REG_EXTENDED|REG_NOSUB) == 0;
-        env->ReleaseStringUTFChars(focused, focused_reg);
     }
 
     if (api_level >= __ANDROID_API_N__ && api_level < __ANDROID_API_O__) {

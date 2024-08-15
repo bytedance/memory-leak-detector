@@ -369,7 +369,7 @@ void registerPltGotProxy(JNIEnv *env, jstring regex) {
     }
 }
 
-void registerInlineProxy(JNIEnv *env) {
+void registerInlineProxy() {
     invoke_je_free();
 
     const int PROXY_MAPPING_LENGTH = sizeof(sInline) / sizeof(sInline[0]);

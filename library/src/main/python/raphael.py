@@ -211,7 +211,7 @@ if __name__ == '__main__':
     else:
         parse_symbol(argParams.symbol)
 
-    reader = open(argParams.report)
+    reader = open(argParams.report, encoding = 'utf-8')
     string = reader.read()
     reader.close()
 

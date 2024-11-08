@@ -26,7 +26,7 @@ __PATTERN__ = re.compile(r'(\S+)-(\S+) \S+ \S+ \S+ (\d+)\s*(.*)$')
 
 
 def analyse(name):
-    reader = open(name, 'r')
+    reader = open(name, 'r', encoding = 'utf-8')
     totals = 0
     detail = {}
     for line in reader.readlines():

@@ -23,15 +23,22 @@
 Raphael* sRaphael = new Raphael();
 
 void start(JNIEnv *env, jobject obj, jint configs, jstring space, jstring regex) {
-    sRaphael->start(env, obj, configs, space, regex);
+    const char *spacestring = (char *) env->GetStringUTFChars(space, 0);
+
+    const char *regexstring = (char *) env->GetStringUTFChars(regex, 0);
+
+    sRaphael->start(configs, spacestring, regexstring);
+
+    env->ReleaseStringUTFChars(space, spacestring);
+    env->ReleaseStringUTFChars(regex, regexstring);
 }
 
 void stop(JNIEnv *env, jobject obj) {
-    sRaphael->stop(env, obj);
+    sRaphael->stop();
 }
 
 void print(JNIEnv *env, jobject obj) {
-    sRaphael->print(env, obj);
+    sRaphael->print();
 }
 
 static const JNINativeMethod sMethods[] = {

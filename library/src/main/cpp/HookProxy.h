@@ -58,7 +58,7 @@ void update_configs(Cache *pNew, uint32_t params) {
 }
 
 //**************************************************************************************************
-static inline void insert_memory_backtrace(void *address, size_t size) {
+static inline void insert_memory_backtrace(void *address, size_t size, ALLOC_FUNC func_name) {
     Backtrace backtrace;
     backtrace.depth = 0;
 
@@ -68,7 +68,7 @@ static inline void insert_memory_backtrace(void *address, size_t size) {
     backtrace.depth = unwind_backtrace(backtrace.trace, depth + 1);
 #endif
 
-    cache->insert((uintptr_t) address, size, &backtrace);
+    cache->insert((uintptr_t) address, size, func_name, &backtrace);
 }
 
 //**************************************************************************************************
@@ -96,7 +96,7 @@ static void *malloc_proxy(size_t size) {
         pthread_setspecific(guard, (void *) 1);
         void *address = malloc_origin(size);
         if (address != NULL) {
-            insert_memory_backtrace(address, size);
+            insert_memory_backtrace(address, size, MALLOC);
         }
         pthread_setspecific(guard, (void *) 0);
         return address;
@@ -111,7 +111,7 @@ static void *calloc_proxy(size_t count, size_t bytes) {
         pthread_setspecific(guard, (void *) 1);
         void *address = calloc_origin(count, bytes);
         if (address != NULL) {
-            insert_memory_backtrace(address, size);
+            insert_memory_backtrace(address, size, CALLOC);
         }
         pthread_setspecific(guard, (void *) 0);
         return address;
@@ -129,7 +129,7 @@ static void *realloc_proxy(void *ptr, size_t size) {
         }
 
         if (address != NULL && size >= limit) {
-            insert_memory_backtrace(address, size);
+            insert_memory_backtrace(address, size, REALLOC);
         }
         pthread_setspecific(guard, (void *) 0);
         return address;
@@ -143,7 +143,7 @@ static void *memalign_proxy(size_t alignment, size_t size) {
         pthread_setspecific(guard, (void *) 1);
         void *address = memalign_origin(alignment, size);
         if (address != NULL) {
-            insert_memory_backtrace(address, size);
+            insert_memory_backtrace(address, size, MEMALIGN);
         }
         pthread_setspecific(guard, (void *) 0);
         return address;
@@ -168,7 +168,7 @@ static void *mmap_proxy(void *ptr, size_t size, int port, int flags, int fd, off
         pthread_setspecific(guard, (void *) 1);
         void *address = mmap_origin(ptr, size, port, flags, fd, offset);
         if (address != MAP_FAILED) {
-            insert_memory_backtrace(address, size);
+            insert_memory_backtrace(address, size, MMAP);
         }
         pthread_setspecific(guard, (void *) 0);
         return address;
@@ -182,7 +182,7 @@ static void *mmap64_proxy(void *ptr, size_t size, int port, int flags, int fd, o
         pthread_setspecific(guard, (void *) 1);
         void *address = mmap64_origin(ptr, size, port, flags, fd, offset);
         if (address != MAP_FAILED) {
-            insert_memory_backtrace(address, size);
+            insert_memory_backtrace(address, size, MMAP64);
         }
         pthread_setspecific(guard, (void *) 0);
         return address;
